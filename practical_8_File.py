@@ -1,0 +1,65 @@
+# file_operations_tool.py
+import os
+
+def lab_assignment_1():
+    """Reads a file and writes its contents to a new file in uppercase."""
+    print("\n--- Lab Assignment 1: Case Conversion ---")
+    source = input("Enter the source text file name: ")
+    destination = "uppercase_" + source
+    
+    try:
+        with open(source, 'r') as src, open(destination, 'w') as dest:
+            content = src.read()
+            dest.write(content.upper())
+        print(f"Success! Uppercase content saved to: {destination}")
+    except FileNotFoundError:
+        print("Error: Source file not found.")
+
+
+def lab_assignment_2():
+    """Copies a Python script to a new file without comments."""
+    print("\n--- Lab Assignment 2: Remove Python Comments ---")
+    source = input("Enter the source Python file name (e.g., script.py): ")
+    destination = input("Enter the destination file name: ")
+
+    try:
+        # Process and write the file
+        with open(source, 'r') as src, open(destination, 'w') as dest:
+            for line in src:
+                # Only write lines that do not start with '#' (ignoring leading whitespace)
+                if not line.strip().startswith('#'):
+                    dest.write(line)
+        
+        # Display results as requested
+        print(f"\n[Content of {source}]:")
+        with open(source, 'r') as f:
+            print(f.read())
+
+        print(f"\n[Content of {destination} (Comments Removed)]:")
+        with open(destination, 'r') as f:
+            print(f.read())
+            
+    except FileNotFoundError:
+        print("Error: Source file not found.")
+
+def main():
+    while True:
+        print("\n--- Python File Handling Practical 8 ---")
+        print("1. Convert File to Uppercase")
+        print("2. Copy Python Script (Remove Comments)")
+        print("3. Exit")
+        
+        choice = input("Select an option (1-3): ")
+        
+        if choice == '1':
+            lab_assignment_1()
+        elif choice == '2':
+            lab_assignment_2()
+        elif choice == '3':
+            print("Exiting program.")
+            break
+        else:
+            print("Invalid choice. Please try again.")
+
+if __name__ == "__main__":
+    main()
