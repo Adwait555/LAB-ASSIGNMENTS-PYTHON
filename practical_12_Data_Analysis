@@ -1,0 +1,89 @@
+import pandas as pd
+import numpy as np
+
+# --- 0. SETUP: GENERATE MOCK DATA ---
+def setup_files():
+    # Creating the Diamonds DataFrame as shown in your image
+    diamond_data = {
+        'carat': [0.23, 0.21, 0.23, 0.29, 0.31],
+        'cut': ['Ideal', 'Premium', 'Good', 'Premium', 'Good'],
+        'color': ['E', 'E', 'E', 'I', 'J'],
+        'clarity': ['SI2', 'SI1', 'VS1', 'VS2', 'SI2'],
+        'depth': [61.5, 59.8, 56.9, 62.4, 63.3],
+        'table': [55.0, 61.0, 65.0, 58.0, 58.0],
+        'price': [326, 326, 327, 334, 335],
+        'x': [3.95, 3.89, 4.05, 4.20, 4.34],
+        'y': [3.98, 3.84, 4.07, 4.23, 4.35],
+        'z': [2.43, 2.31, 2.31, 2.63, 2.75]
+    }
+    df_diamonds = pd.DataFrame(diamond_data)
+
+    # Creating the employee.xlsx file
+    emp_data = {
+        'Employee ID': [101, 102, 103, 104, 105],
+        'Employee Name': ['Amit', 'Suman', 'Rahul', 'Priya', 'Neha'],
+        'Department': ['Automotive', 'HR', 'Automotive', 'IT', 'Finance'],
+        'Designation': ['Developer', 'Manager', 'Tester', 'Developer', 'Analyst']
+    }
+    pd.DataFrame(emp_data).to_excel("employee.xlsx", index=False)
+    
+    return df_diamonds
+
+# --- 1. DIAMONDS DATAFRAME OPERATIONS ---
+def run_diamonds_analysis(df):
+    print("\n" + "="*40)
+    print("1. DIAMONDS DATAFRAME REPORTS")
+    print("="*40)
+
+    # i) Calculate mean of price for each cut
+    print("\ni) Mean Price for each Cut:")
+    print(df.groupby('cut')['price'].mean())
+
+    # ii) Count, Min, and Max price for each cut
+    print("\nii) Price Statistics (Count, Min, Max) for each Cut:")
+    stats = df.groupby('cut')['price'].agg(['count', 'min', 'max'])
+    print(stats)
+
+    # Average value of x, y, and z separately
+    print("\nAverage values for parameters x, y, and z:")
+    print(f"Average x: {df['x'].mean():.2f}")
+    print(f"Average y: {df['y'].mean():.2f}")
+    print(f"Average z: {df['z'].mean():.2f}")
+
+# --- 2. INFOSYS EMPLOYEE EXCEL ANALYSIS ---
+def run_employee_analysis():
+    print("\n" + "="*40)
+    print("2. INFOSYS EMPLOYEE REPORTS")
+    print("="*40)
+
+    try:
+        # Load the excel file
+        # Note: requires 'openpyxl' library installed (pip install openpyxl)
+        df_emp = pd.read_excel("employee.xlsx")
+
+        # a) Employees in "Automotive" domain
+        print("\na) Employees in 'Automotive' Department:")
+        auto_emp = df_emp[df_emp['Department'] == 'Automotive']
+        print(auto_emp.to_string(index=False))
+
+        # b) Detail of employee by ID (User Input)
+        search_id = int(input("\nb) Enter Employee ID to search: "))
+        result = df_emp[df_emp['Employee ID'] == search_id]
+        if not result.empty:
+            print(result.to_string(index=False))
+        else:
+            print(f"No employee found with ID {search_id}")
+
+        # d) List of all Developers
+        print("\nd) List of all Developers:")
+        developers = df_emp[df_emp['Designation'] == 'Developer']
+        print(developers.to_string(index=False))
+
+    except Exception as e:
+        print(f"Error processing Excel file: {e}")
+
+# --- MAIN EXECUTION ---
+if __name__ == "__main__":
+    diamonds_df = setup_files()
+    run_diamonds_analysis(diamonds_df)
+    run_employee_analysis()
